@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Multi-User Video Call</title>
+
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="assets/css/app.css" type="text/css" />
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="assets/js/rtc.js"></script>
+    <script type="module" src="assets/js/events.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/7.3.0/adapter.min.js"
+      integrity="sha256-2qQheewaqnZlXJ3RJRghVUwD/3fD9HNqxh4C+zvgmF4="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"></script>
+    <script src="https://cdn.rawgit.com/yahoo/xss-filters/master/dist/xss-filters.js"></script>
+    <script src="assets/js/autolink.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  </head>
+
+  <body>
+    <div class="custom-modal" id="recording-options-modal">
+      <div class="custom-modal-content">
+        <div class="row text-center">
+          <div class="col-md-6 mb-2">
+            <span class="record-option" id="record-video">Record video</span>
+          </div>
+          <div class="col-md-6 mb-2">
+            <span class="record-option" id="record-screen">Record screen</span>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-12 text-center">
+            <button class="btn btn-outline-danger" id="closeModal">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- reva meet navigation bar -->
+    <nav class="navbar bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand pt-0" href="#">
+          <svg
+            width="300.1042693624879"
+            height="80.5"
+            viewBox="0 0 363.1042693624879 120.5"
+            class="css-1j8o68f"
+          >
+            <defs id="SvgjsDefs1115">
+              <linearGradient id="SvgjsLinearGradient1124">
+                <stop id="SvgjsStop1125" stop-color="#00ff8f" offset="0"></stop>
+                <stop id="SvgjsStop1126" stop-color="#00a1ff" offset="1"></stop>
+              </linearGradient>
+            </defs>
+            <g
+              id="SvgjsG1116"
+              featurekey="zdvuGz-0"
+              transform="matrix(2.138331513094391,0,0,2.138331513094391,90.71700078625258,77.73337152247504)"
+              fill="url(#SvgjsLinearGradient1124)"
+            >
+              <path
+                d="M5.38 13 l0 4.7 q0 2.3 -2.24 2.3 l-0.3 0 q-1.2 0 -1.72 -0.61 t-0.52 -1.69 l0 -14.34 q0 -1.1 0.52 -1.7 t1.72 -0.6 l0.3 0 q2.24 0 2.24 2.3 l0 4.7 l-1.66 0 l0 -4.48 q0 -0.4 -0.16 -0.63 t-0.58 -0.23 t-0.57 0.23 t-0.15 0.63 l0 13.9 q0 0.4 0.15 0.63 t0.57 0.23 t0.58 -0.23 t0.16 -0.63 l0 -4.48 l1.66 0 z M8.24 1.3200000000000003 l0 17 l1.46 0 l0 1.68 l-3.12 0 l0 -18.68 l1.66 0 z M10.82 20 l0.98 -18.68 l2.82 0 l0.98 18.68 l-1.54 0 l-0.2 -3.9 l-0.28 0.4 q-0.52 0.72 -0.76 1.16 t-0.32 0.85 t-0.12 1.11 l-0.02 0.38 l-1.54 0 z M13.46 13.52 q0.18 -0.5 0.18 -1.42 l-0.44 -8.28 l-0.58 11.14 q0.66 -0.94 0.84 -1.44 z M18.700000000000003 8.22 q0.24 0.6 1.04 1.7 q0.8 1.12 1.16 1.74 t0.52 1.29 t0.16 1.71 l0 3.04 q0 2.3 -2.24 2.3 l-0.3 0 q-1.2 0 -1.72 -0.61 t-0.52 -1.69 l0 -4.66 l1.66 0 l0 4.44 q0 0.4 0.15 0.63 t0.57 0.23 t0.58 -0.23 t0.16 -0.63 l0 -3.06 q0 -0.92 -0.25 -1.5 t-1.05 -1.7 q-0.8 -1.1 -1.16 -1.74 t-0.51 -1.32 t-0.15 -1.72 l0 -3.08 q0 -1.1 0.52 -1.7 t1.72 -0.6 l0.3 0 q2.24 0 2.24 2.3 l0 4.7 l-1.66 0 l0 -4.48 q0 -0.4 -0.16 -0.63 t-0.58 -0.23 t-0.57 0.23 t-0.15 0.63 l0 3.08 q0 0.96 0.24 1.56 z M24.680000000000003 8.22 q0.24 0.6 1.04 1.7 q0.8 1.12 1.16 1.74 t0.52 1.29 t0.16 1.71 l0 3.04 q0 2.3 -2.24 2.3 l-0.3 0 q-1.2 0 -1.72 -0.61 t-0.52 -1.69 l0 -4.66 l1.66 0 l0 4.44 q0 0.4 0.15 0.63 t0.57 0.23 t0.58 -0.23 t0.16 -0.63 l0 -3.06 q0 -0.92 -0.25 -1.5 t-1.05 -1.7 q-0.8 -1.1 -1.16 -1.74 t-0.51 -1.32 t-0.15 -1.72 l0 -3.08 q0 -1.1 0.52 -1.7 t1.72 -0.6 l0.3 0 q2.24 0 2.24 2.3 l0 4.7 l-1.66 0 l0 -4.48 q0 -0.4 -0.16 -0.63 t-0.58 -0.23 t-0.57 0.23 t-0.15 0.63 l0 3.08 q0 0.96 0.24 1.56 z M34.42 3 l0 6.82 l1.46 0 l0 1.68 l-1.46 0 l0 8.5 l-1.66 0 l0 -18.68 l3.12 0 l0 1.68 l-1.46 0 z M41.86000000000001 3.3599999999999994 l0 14.34 q0 2.3 -2.24 2.3 l0.88 0 l-1.18 0 q-1.2 0 -1.72 -0.61 t-0.52 -1.69 l0 -14.34 q0 -1.1 0.52 -1.7 t1.72 -0.6 l0.98 0 l-0.68 0 q2.24 0 2.24 2.3 z M40.2 3.5799999999999983 q0 -0.4 -0.16 -0.63 t-0.58 -0.23 t-0.57 0.23 t-0.15 0.63 l0 13.9 q0 0.4 0.15 0.63 t0.57 0.23 t0.58 -0.23 t0.16 -0.63 l0 -13.9 z M47.84000000000001 20 l-1.64 0 l-0.02 -5.72 q0 -0.72 -0.14 -1.21 t-0.54 -1.09 q-0.46 0.7 -0.62 1.22 t-0.16 1.34 l0 5.46 l-1.66 0 l0 -18.68 l2.54 0 q2.24 0 2.24 2.32 l0 2.88 q0 1.32 -0.26 2.1 t-1.04 1.9 q0.76 1.08 1.03 1.85 t0.27 2.03 l0 5.6 z M46.18000000000001 3.84 q0 -0.4 -0.15 -0.63 t-0.57 -0.23 l-0.74 0 l0 7.2 q0.06 -0.06 0.09 -0.12 t0.07 -0.1 q0.8 -1.1 1.05 -1.69 t0.25 -1.51 l0 -2.92 z M54.70000000000001 3 l0 6.82 l1.46 0 l0 1.68 l-1.46 0 l0 8.5 l-1.66 0 l0 -18.68 l3.12 0 l0 1.68 l-1.46 0 z M62.140000000000015 1.3200000000000003 l0 16.38 q0 2.3 -2.24 2.3 l-0.3 0 q-1.2 0 -1.72 -0.61 t-0.52 -1.69 l0 -16.38 l1.66 0 l0 16.16 q0 0.4 0.15 0.63 t0.57 0.23 t0.58 -0.23 t0.16 -0.63 l0 -16.16 l1.66 0 z M68.12 2.9800000000000004 l-1.56 0 l0 17.02 l-1.66 0 l0 -17.02 l-1.56 0 l0 -1.66 l4.78 0 l0 1.66 z M74.10000000000001 1.3200000000000003 l0 16.38 q0 2.3 -2.24 2.3 l-0.3 0 q-1.2 0 -1.72 -0.61 t-0.52 -1.69 l0 -16.38 l1.66 0 l0 16.16 q0 0.4 0.15 0.63 t0.57 0.23 t0.58 -0.23 t0.16 -0.63 l0 -16.16 l1.66 0 z M80.08000000000001 20 l-1.64 0 l-0.02 -5.72 q0 -0.72 -0.14 -1.21 t-0.54 -1.09 q-0.46 0.7 -0.62 1.22 t-0.16 1.34 l0 5.46 l-1.66 0 l0 -18.68 l2.54 0 q2.24 0 2.24 2.32 l0 2.88 q0 1.32 -0.26 2.1 t-1.04 1.9 q0.76 1.08 1.03 1.85 t0.27 2.03 l0 5.6 z M78.42000000000002 3.84 q0 -0.4 -0.15 -0.63 t-0.57 -0.23 l-0.74 0 l0 7.2 q0.06 -0.06 0.09 -0.12 t0.07 -0.1 q0.8 -1.1 1.05 -1.69 t0.25 -1.51 l0 -2.92 z M82.94000000000003 3 l0 6.82 l1.48 0 l0 1.68 l-1.48 0 l0 6.82 l1.48 0 l0 1.68 l-3.14 0 l0 -18.68 l3.14 0 l0 1.68 l-1.48 0 z"
+              ></path>
+            </g>
+            <g
+              id="SvgjsG1117"
+              featurekey="nameLeftFeature-0"
+              transform="matrix(2.4064169527583177,0,0,2.4064169527583177,-3.898398630482973,2.9679152362084125)"
+              fill="#ffffff"
+            >
+              <path
+                d="M11.1 14.1 l3.02 4.62 q0.22 0.36 0.02 0.72 q-0.08 0.16 -0.25 0.26 t-0.35 0.1 l-1.82 0 q-0.18 0 -0.34 -0.09 t-0.24 -0.23 l-3.04 -4.82 l-3.56 0 l0 4.44 q0 0.28 -0.21 0.49 t-0.49 0.21 l-1.52 0 q-0.28 0 -0.49 -0.21 t-0.21 -0.49 l0 -6.58 q0 -0.28 0.21 -0.49 t0.49 -0.21 l6.16 0 q1.76 0 2.34 -1 q0.2 -0.32 0.2 -0.92 q0 -0.94 -0.62 -1.48 q-0.64 -0.58 -1.84 -0.58 l-6.24 0 q-0.28 0 -0.49 -0.21 t-0.21 -0.49 l0 -1.44 q0 -0.28 0.21 -0.49 t0.49 -0.21 l6.42 0 q2.34 0 3.74 1.32 q1.46 1.32 1.46 3.58 q0 1.46 -0.64 2.49 t-1.86 1.57 z M27.119999999999997 16.96 q0.3 0 0.5 0.21 t0.2 0.51 l0 1.46 q0 0.28 -0.2 0.49 t-0.5 0.21 l-9.88 0 q-0.28 0 -0.49 -0.21 t-0.21 -0.49 l0 -1.46 q0 -0.3 0.21 -0.51 t0.49 -0.21 l9.88 0 z M17.24 13.86 q-0.28 0 -0.49 -0.21 t-0.21 -0.49 l0 -1.5 q0 -0.28 0.21 -0.49 t0.49 -0.21 l8.98 0 q0.3 0 0.51 0.21 t0.21 0.49 l0 1.5 q0 0.28 -0.21 0.49 t-0.51 0.21 l-8.98 0 z M27.119999999999997 5 q0.3 0 0.5 0.21 t0.2 0.49 l0 1.46 q0 0.3 -0.2 0.51 t-0.5 0.21 l-9.88 0 q-0.28 0 -0.49 -0.21 t-0.21 -0.51 l0 -1.46 q0 -0.28 0.21 -0.49 t0.49 -0.21 l9.88 0 z M42.72 5.32 q0.22 0.3 0.08 0.66 l-5.48 13.54 q-0.08 0.2 -0.26 0.32 t-0.4 0.12 l-1.76 0 q-0.22 0 -0.4 -0.12 t-0.26 -0.32 l-5.48 -13.54 q-0.16 -0.34 0.06 -0.66 t0.58 -0.32 l6.68 0 q0.28 0 0.49 0.21 t0.21 0.51 l0 1.46 q0 0.3 -0.21 0.51 t-0.49 0.21 l-3.36 0 l3.06 7.7 l4.02 -10.16 q0.08 -0.2 0.26 -0.32 t0.4 -0.12 l1.68 0 q0.18 0 0.34 0.09 t0.24 0.23 z M57.7 18.86 q0.14 0.32 -0.07 0.65 t-0.57 0.33 l-13.32 0 q-0.18 0 -0.34 -0.09 t-0.24 -0.23 q-0.22 -0.32 -0.06 -0.66 l0.62 -1.46 q0.08 -0.2 0.26 -0.32 t0.38 -0.12 l9.32 0 l-3.28 -7.84 l-2.68 6.4 q-0.08 0.2 -0.25 0.31 t-0.39 0.11 l-1.68 0 q-0.38 0 -0.6 -0.32 q-0.08 -0.14 -0.1 -0.32 t0.04 -0.34 l4.06 -9.52 q0.08 -0.2 0.25 -0.32 t0.39 -0.12 l1.92 0 q0.22 0 0.39 0.12 t0.25 0.32 z"
+              ></path>
+            </g>
+            <g
+              id="SvgjsG1118"
+              featurekey="inlineSymbolFeature-0"
+              transform="matrix(0.5214242543099556,0,0,0.5214242543099556,147.9607725668156,-0.951599288979115)"
+              fill="#ffffff"
+            >
+              <g xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M107.9,87.2c-0.4-2.5-1.8-4.6-3.6-6.1l0,0l-4.8,3.4c0,0,0,0,0,0l-1.6,1.1l1.1,0.3c1.1,0.3,2,1.3,2.2,2.5l5.3,31H21.5   l5.3-31c0.2-1.2,1.1-2.2,2.2-2.5l1.1-0.3l-1.6-1.1c0,0,0,0,0,0l-4.8-3.4l0,0c-1.9,1.5-3.2,3.6-3.6,6.1l-6.6,38.9h101.1L107.9,87.2z   "
+                ></path>
+                <polygon
+                  points="39.3,76.2 28.6,79 34.2,83 64,103.8 93.8,83 99.4,79 88.7,76.2 64,90.4  "
+                ></polygon>
+                <path
+                  d="M24.6,14.8l15.2,4.1v30.9c0,13.5,10.9,24.4,24.4,24.4c6.7,0,12.8-2.7,17.2-7.1c4.4-4.4,7.1-10.5,7.1-17.2v-10c0,0,0,0,0,0   v-21l14.2-3.8v8.3c-0.4,0.3-0.7,0.7-0.7,1.2c0,0.5,0.3,1,0.7,1.2c-0.5,1.7-1.7,6.7-1.7,10.9c0,0,0.5,0.8,2.5,0.9   c2-0.1,2.5-0.9,2.5-0.9c0-4.2-1.2-9.2-1.7-10.9c0.4-0.3,0.7-0.7,0.7-1.2c0-0.5-0.3-1-0.7-1.2v-9c0.5-0.6,0.3-1.7-0.6-1.9L64.4,1.9   c-0.2-0.1-0.4-0.1-0.6,0L24.6,12.4C23.4,12.7,23.4,14.4,24.6,14.8z M44.5,39.5c2,0,3.9,0.2,5.8,0.6c5.7,1.1,10.6,3.8,13.8,7.9l0,0   l0,0c3.2-4.1,8-6.8,13.8-7.9c1.8-0.4,3.8-0.5,5.8-0.6v10.3c0,10.8-8.8,19.6-19.6,19.6s-19.6-8.8-19.6-19.6V39.5z"
+                ></path>
+                <path
+                  d="M64.1,63c6.2,0,11.3-4.2,12.8-10H51.3C52.7,58.7,57.9,63,64.1,63z"
+                ></path>
+              </g>
+            </g>
+            <g
+              id="SvgjsG1119"
+              featurekey="nameRightFeature-0"
+              transform="matrix(2.4064169527583177,0,0,2.4064169527583177,214.00267717272303,2.967918678615476)"
+              fill="#ffffff"
+            >
+              <path
+                d="M19.56 5 q0.28 0 0.49 0.21 t0.21 0.49 l0 13.4 q0 0.28 -0.21 0.49 t-0.49 0.21 l-1.52 0 q-0.3 0 -0.5 -0.21 t-0.2 -0.49 l0 -9.04 l-3.7 4.76 q-0.22 0.26 -0.56 0.26 l0 0 q-0.16 0 -0.32 -0.07 t-0.24 -0.21 l-6.56 -8.68 q-0.12 -0.14 -0.14 -0.35 t0.08 -0.38 t0.26 -0.28 t0.36 -0.11 l1.76 0 q0.34 0 0.56 0.28 l4.24 5.6 l4.14 -5.6 q0.22 -0.28 0.58 -0.28 l1.76 0 z M8.04 14.7 q0.28 0 0.49 0.2 t0.21 0.5 l0 3.7 q0 0.28 -0.21 0.49 t-0.49 0.21 l-1.52 0 q-0.28 0 -0.49 -0.21 t-0.21 -0.49 l0 -3.7 q0 -0.3 0.21 -0.5 t0.49 -0.2 l1.52 0 z M34.08 16.96 q0.3 0 0.5 0.21 t0.2 0.51 l0 1.46 q0 0.28 -0.2 0.49 t-0.5 0.21 l-9.88 0 q-0.28 0 -0.49 -0.21 t-0.21 -0.49 l0 -1.46 q0 -0.3 0.21 -0.51 t0.49 -0.21 l9.88 0 z M24.2 13.86 q-0.28 0 -0.49 -0.21 t-0.21 -0.49 l0 -1.5 q0 -0.28 0.21 -0.49 t0.49 -0.21 l8.98 0 q0.3 0 0.51 0.21 t0.21 0.49 l0 1.5 q0 0.28 -0.21 0.49 t-0.51 0.21 l-8.98 0 z M34.08 5 q0.3 0 0.5 0.21 t0.2 0.49 l0 1.46 q0 0.3 -0.2 0.51 t-0.5 0.21 l-9.88 0 q-0.28 0 -0.49 -0.21 t-0.21 -0.51 l0 -1.46 q0 -0.28 0.21 -0.49 t0.49 -0.21 l9.88 0 z M47.78 16.96 q0.3 0 0.5 0.21 t0.2 0.51 l0 1.46 q0 0.28 -0.2 0.49 t-0.5 0.21 l-9.88 0 q-0.28 0 -0.49 -0.21 t-0.21 -0.49 l0 -1.46 q0 -0.3 0.21 -0.51 t0.49 -0.21 l9.88 0 z M37.9 13.86 q-0.28 0 -0.49 -0.21 t-0.21 -0.49 l0 -1.5 q0 -0.28 0.21 -0.49 t0.49 -0.21 l8.98 0 q0.3 0 0.51 0.21 t0.21 0.49 l0 1.5 q0 0.28 -0.21 0.49 t-0.51 0.21 l-8.98 0 z M47.78 5 q0.3 0 0.5 0.21 t0.2 0.49 l0 1.46 q0 0.3 -0.2 0.51 t-0.5 0.21 l-9.88 0 q-0.28 0 -0.49 -0.21 t-0.21 -0.51 l0 -1.46 q0 -0.28 0.21 -0.49 t0.49 -0.21 l9.88 0 z M52.32 5 q0.3 0 0.51 0.21 t0.21 0.51 l0 1.46 q0 0.3 -0.21 0.51 t-0.51 0.21 l-2.06 0 q-0.28 0 -0.49 -0.21 t-0.21 -0.51 l0 -1.46 q0 -0.3 0.21 -0.51 t0.49 -0.21 l2.06 0 z M61.260000000000005 5 q0.28 0 0.49 0.21 t0.21 0.51 l0 1.46 q0 0.3 -0.21 0.51 t-0.49 0.21 l-4.02 0 l0 11.36 q0 0.28 -0.21 0.49 t-0.49 0.21 l-1.54 0 q-0.3 0 -0.51 -0.21 t-0.21 -0.49 l0 -13.54 q0 -0.3 0.21 -0.51 t0.51 -0.21 l6.26 0 z"
+              ></path>
+            </g>
+          </svg>
+        </a>
+      </div>
+    </nav>
+    <!-- slider start -->
+    <div
+      id="myCarousel"
+      class="carousel slide"
+      data-ride="carousel"
+      style="margin-top: 1%"
+    >
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+      </ol>
+
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner">
+        <div class="item active">
+          <img
+            src="./assets/Images/_Bachelor_of_Computer_Application_(BCA).jpg"
+            alt="image1"
+          />
+        </div>
+
+        <div class="item">
+          <img
+            src="./assets/Images/_Master_of_Computer_Applications_(MCA).jpg"
+            alt="image2"
+          />
+        </div>
+
+        <div class="item">
+          <img
+            src="./assets/Images/_School_of_Computer_Science_and_Applications.jpg"
+            alt="image3"
+          />
+        </div>
+      </div>
+
+      <!-- Left and right controls -->
+      <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="right carousel-control" href="#myCarousel" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+
+    <!-- navigation bar end -->
+
+    <div class="pull-right room-comm" hidden>
+      <button
+        class="btn btn-sm rounded-0 btn-no-effect"
+        id="toggle-video"
+        title="Hide Video"
+      >
+        <i class="fa fa-video text-white"></i>
+      </button>
+
+      <button
+        class="btn btn-sm rounded-0 btn-no-effect"
+        id="toggle-mute"
+        title="Mute"
+      >
+        <i class="fa fa-microphone-alt text-white"></i>
+      </button>
+
+      <button
+        class="btn btn-sm rounded-0 btn-no-effect"
+        id="share-screen"
+        title="Share screen"
+      >
+        <i class="fa fa-desktop text-white"></i>
+      </button>
+
+      <button
+        class="btn btn-sm rounded-0 btn-no-effect"
+        id="record"
+        title="Record"
+      >
+        <i class="fa fa-dot-circle text-white"></i>
+      </button>
+
+      <button
+        class="btn btn-sm text-white pull-right btn-no-effect"
+        id="toggle-chat-pane"
+      >
+        <i class="fa fa-comment"></i>
+        <span
+          class="badge badge-danger very-small font-weight-lighter"
+          id="new-chat-notification"
+          hidden
+          >New</span
+        >
+      </button>
+
+      <button class="btn btn-sm rounded-0 btn-no-effect text-white">
+        <a href="/" class="text-white text-decoration-none"
+          ><i class="fa fa-sign-out-alt text-white" title="Leave"></i
+        ></a>
+      </button>
+    </div>
+
+    <!--  create class start  -->
+
+    <div class="container-fluid mt-5" id="room-create" hidden>
+      <div class="row">
+        <div class="col-12 h2 mt-5 text-center">START CLASS</div>
+      </div>
+
+      <div class="row mt-2 create_class">
+        <div class="col-12 text-center">
+          <span class="form-text small text-danger" id="err-msg"></span>
+        </div>
+
+        <div class="col-12 col-md-4 offset-md-4 mb-3">
+          <label for="room-name">Course</label>
+          <!--input type="text" id='room-name' class="form-control rounded-0" placeholder="Room Name"-->
+          <div class="dropdown">
+            <div class="dropdown-content">
+              <select id="room-name" class="inputbody" name="Branch">
+                <option value="BCA">BCA</option>
+                <option value="MCA">MCA</option>
+                <option value="BSc">BSc</option>
+                <option value="MBA">MBA</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-4 offset-md-4 mb-3">
+          <label for="your-name">Section</label><br />
+          <!-- <input type="text" id='your-name' class="form-control rounded-0" placeholder="Your Name"> -->
+          <select id="your-name" class="inputbody" name="Section">
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+          </select>
+        </div>
+
+        <div class="col-12 col-md-4 offset-md-4 mb-3">
+          <button id="create-room" class="btn btn-block rounded-0 btn-info">
+            Start Class
+          </button>
+        </div>
+
+        <div class="col-12 col-md-4 offset-md-4 mb-3" id="room-created"></div>
+      </div>
+      <div class="card" style="width: 18rem">
+        <img
+          class="card-img-top"
+          src="./assets/Images/calendar1.jpg"
+          alt="Card image cap"
+        />
+        <div class="card-body">
+          <h5 class="card-title">Schedule Your class</h5>
+          <p class="card-text">Schedule your class as per your date and time</p>
+          <a href="#" class="btn btn-primary">Schedule ></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- create class end -->
+
+    <div class="container-fluid" id="username-set" hidden>
+      <div class="row">
+        <div class="col-12 h4 mt-5 text-center">Your Name</div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-12 text-center">
+          <span
+            class="form-text small text-danger"
+            id="err-msg-username"
+          ></span>
+        </div>
+
+        <div class="col-12 col-md-4 offset-md-4 mb-3">
+          <label for="username">Your Name</label>
+          <input
+            type="text"
+            id="username"
+            class="form-control rounded-0"
+            placeholder="Your Name"
+          />
+        </div>
+
+        <div class="col-12 col-md-4 offset-md-4 mb-3">
+          <button id="enter-room" class="btn btn-block rounded-0 btn-info">
+            Enter Room
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid room-comm" hidden>
+      <div class="row">
+        <video
+          class="local-video mirror-mode"
+          id="local"
+          volume="0"
+          autoplay
+          muted
+        ></video>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 main" id="main-section">
+          <div class="row mt-2 mb-2" id="videos"></div>
+        </div>
+
+        <div
+          class="col-md-3 chat-col d-print-none mb-2 bg-info"
+          id="chat-pane"
+          hidden
+        >
+          <div class="row">
+            <div class="col-12 text-center h2 mb-3">CHAT</div>
+          </div>
+
+          <div id="chat-messages"></div>
+
+          <div class="row">
+            <textarea
+              id="chat-input"
+              class="form-control rounded-0 chat-box border-info"
+              rows="3"
+              placeholder="Type here..."
+            ></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
